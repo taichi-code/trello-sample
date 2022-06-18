@@ -54,37 +54,24 @@
     <main class="main">
         <div class="content-wrapper">
             <form action="complete.php" method="POST">
-                <h2>ToDoリスト 入力ページ</h2>
+                <h2>登録完了ページ</h2>
                 <div class="input-area">
                     <p class="input-title">予定タイトル</p>
-                    <input type="text" name="todo-title" placeholder="例）買い物" required>
+                    <p class="complete_text"><?php echo($_POST['todo-title']); ?></p>
                 </div>
                 <div class="input-area">
                     <p class="input-title">優先度</p>
-                    <div class="radio-area">
-                        <label><input type="radio" name="todo-priority" value="高" checked>高</label>
-                        <label><input type="radio" name="todo-priority" value="中">中</label>
-                        <label><input type="radio" name="todo-priority" value="低">低</label>
-                    </div>
+                    <p class="complete_text"><?php echo($_POST['todo-priority']); ?></p>
                 </div>
                 <div class="input-area">
                     <p class="input-title">予定種別</p>
-                    <select name="todo-kind" required>
-                        <option value="">--選択--</option>
-                        <option value="仕事">仕事</option>
-                        <option value="外出">外出</option>
-                        <option value="勉強">勉強</option>
-                    </select>
+                    <p class="complete_text"><?php echo($_POST['todo-kind']); ?></p>
                 </div>
-
                 <div class="input-area">
                     <p class="input-title">予定詳細</p>
-                    <textarea name="todo-desc" rows="5" placeholder="例）具体的な内容を記載"></textarea>
+                    <p class="complete_text"><?php echo($_POST['todo-desc']); ?></p>
                 </div>
 
-                <div class="input-area">
-                    <input type="submit" name="submit" value="送信する" class="btn-submit">
-                </div>
             </form>
         </div>
 
