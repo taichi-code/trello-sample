@@ -182,7 +182,6 @@ input,
 select,
 textarea {
     background-color: transparent;
-    border-style: none
 }
 
 select::-ms-expand {

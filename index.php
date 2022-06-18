@@ -1,3 +1,55 @@
+<?PHP
+ini_set("display_errors", 1);
+error_reporting(E_ALL);
+session_start();
+require('./dbconnect.php');
+
+// TODOをすべて取得
+function fetchAll()
+{
+    $sql = "SELECT * FROM tasks";
+    $query = dbConnect()->query($sql);
+    return $query->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// TODO作成
+function create($title)
+{
+    $now = date('Y/m/d H:i:s');
+    $sql = 'insert into tasks (title,created) values(?,?)';
+    $stmt = dbConnect()->prepare($sql);
+    $stmt->execute([$title, $now]);
+}
+
+function update($id, $title)
+{
+    $sql = 'UPDATE tasks SET title=?, modified = ? WHERE tasks.id = ?';
+    $stmt = dbConnect()->prepare($sql);
+    $stmt->execute([$title, date('Y/m/d H:i:s'), $id]);
+}
+
+// 削除
+function delete($id)
+{
+    $sql = 'delete from tasks WHERE tasks.id = ?';
+    $stmt = dbConnect()->prepare($sql);
+    $stmt->execute([$id]);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!empty($_POST['submit'])) {
+        create($_POST['submit']);
+    } else if (isset($_POST['delete'])) {
+        delete($_POST['id']);
+    } else if (isset($_POST['update'])) {
+        update($_POST['id'], $_POST['title']);
+    }
+    header('Location: ' . $_SERVER['SCRIPT_NAME']);
+    exit;
+}
+$DATA = fetchAll();
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -17,76 +69,62 @@
 <body>
     <!-- HEADER-------------------------- -->
     <header class="header">
-        <!-- <div class="header__logo">
-            <h1 class="logo">
-                <a href="#" class="logo__link"><img src="images/logo.svg" class="logo__img" alt="PDN DESIGN"></a>
-            </h1>
-        </div>
-        <nav class="global-nav">
-            <ul class="global-nav__list">
-                <li class="global-nav__item">
-                    <a href="#" class="global-nav__link">news</a>
-                </li>
-                <li class="global-nav__item">
-                    <a href="#" class="global-nav__link">service</a>
-                </li>
-                <li class="global-nav__item">
-                    <a href="#" class="global-nav__link">works</a>
-                </li>
-                <li class="global-nav__item">
-                    <a href="#" class="global-nav__link">company</a>
-                </li>
-                <li class="global-nav__item">
-                    <a href="#" class="global-nav__link">recruit</a>
-                </li>
-                <li class="global-nav__item">
-                    <a href="#" class="global-nav__link">contact</a>
-                </li>
-            </ul>
-        </nav>
-        <button type="button" class="btn-menu">
-            <span class="btn-menu__line"></span>
-        </button> -->
     </header>
 
 
     <!-- MAIN---------------------------- -->
     <main class="main">
-        <div class="content-wrapper">
-            <form action="complete.php" method="POST">
-                <h2>ToDoリスト 入力ページ</h2>
-                <div class="input-area">
-                    <p class="input-title">予定タイトル</p>
-                    <input type="text" name="todo-title" placeholder="例）買い物" required>
-                </div>
-                <div class="input-area">
-                    <p class="input-title">優先度</p>
-                    <div class="radio-area">
-                        <label><input type="radio" name="todo-priority" value="高" checked>高</label>
-                        <label><input type="radio" name="todo-priority" value="中">中</label>
-                        <label><input type="radio" name="todo-priority" value="低">低</label>
-                    </div>
-                </div>
-                <div class="input-area">
-                    <p class="input-title">予定種別</p>
-                    <select name="todo-kind" required>
-                        <option value="">--選択--</option>
-                        <option value="仕事">仕事</option>
-                        <option value="外出">外出</option>
-                        <option value="勉強">勉強</option>
-                    </select>
-                </div>
-
-                <div class="input-area">
-                    <p class="input-title">予定詳細</p>
-                    <textarea name="todo-desc" rows="5" placeholder="例）具体的な内容を記載"></textarea>
-                </div>
-
-                <div class="input-area">
-                    <input type="submit" name="submit" value="送信する" class="btn-submit">
-                </div>
+        <section>
+            <form method="post">
+                <input type="text" name="submit" required>
+                <button type="submit">作成する</button>
             </form>
-        </div>
+
+            <table>
+                <?php if ($DATA) : ?>
+                    <tr>
+                        <th bgcolor="#808080" rowspan="2">
+                            <p>TODO</p>
+                        </th>
+                        <th bgcolor="#808080" rowspan="2">
+                            <p>作成日</p>
+                        </th>
+                        <th bgcolor="#808080" colspan="2" id="action">
+                            <p>操作</p>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th bgcolor="#808080" headers="action">
+                            <p>更新</p>
+                        </th>
+                        <th bgcolor="#808080" headers="action">
+                            <p>削除</p>
+                        </th>
+                    </tr>
+                <?php endif; ?>
+
+                <?php foreach ((array)$DATA as $raw) : ?>
+                    <form method="post">
+                        <tr>
+                            <input type="hidden" name="id" value="<?php echo $raw['id']; ?>">
+                            <td>
+                                <input type="text" name="title" value="<?php echo $raw['title']; ?>" required>
+                            </td>
+                            <td>
+                                <?php echo $raw['created']; ?>
+                            </td>
+                            <td>
+                                <button type="submit" name="update">更新する</button>
+                            </td>
+                            <td>
+                                <button type="submit" name="delete">削除する</button>
+                            </td>
+                        </tr>
+                    </form>
+                <?php endforeach; ?>
+
+            </table>
+        </section>
 
     </main>
     <!-- FOOTER-------------------------- -->
