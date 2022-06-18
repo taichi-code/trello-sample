@@ -2,39 +2,8 @@
 ini_set("display_errors", 1);
 error_reporting(E_ALL);
 session_start();
-require('./dbconnect.php');
-
-// TODOをすべて取得
-function fetchAll()
-{
-    $sql = "SELECT * FROM tasks";
-    $query = dbConnect()->query($sql);
-    return $query->fetchAll(PDO::FETCH_ASSOC);
-}
-
-// TODO作成
-function create($title)
-{
-    $now = date('Y/m/d H:i:s');
-    $sql = 'insert into tasks (title,created) values(?,?)';
-    $stmt = dbConnect()->prepare($sql);
-    $stmt->execute([$title, $now]);
-}
-
-function update($id, $title)
-{
-    $sql = 'UPDATE tasks SET title=?, modified = ? WHERE tasks.id = ?';
-    $stmt = dbConnect()->prepare($sql);
-    $stmt->execute([$title, date('Y/m/d H:i:s'), $id]);
-}
-
-// 削除
-function delete($id)
-{
-    $sql = 'delete from tasks WHERE tasks.id = ?';
-    $stmt = dbConnect()->prepare($sql);
-    $stmt->execute([$id]);
-}
+require_once('./dbconnect.php');
+require_once('./functions.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($_POST['submit'])) {
@@ -74,8 +43,9 @@ $DATA = fetchAll();
 
     <!-- MAIN---------------------------- -->
     <main class="main">
-        <section>
-            <form method="post">
+        <section class="content-wrapper">
+            <h2>TODOリスト</h2>
+            <form method="post" class="create-form">
                 <input type="text" name="submit" required>
                 <button type="submit">作成する</button>
             </form>
