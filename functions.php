@@ -11,3 +11,9 @@ function fetchAll() {
     $stmt = dbConnect()->prepare($sql);
     $stmt->execute([$list_title]);
  }
+
+ function createCard($card_title,$id) {
+    $sql = "UPDATE cards SET card_title=? WHERE cards.id = ?";
+    $stmt = dbConnect()->prepare($sql);
+    $stmt->execute([$card_title,$id]);
+ }

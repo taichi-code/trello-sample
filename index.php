@@ -6,9 +6,14 @@ require_once('./dbconnect.php');
 require_once('./functions.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!empty($_POST['submit'])) {
-        create($_POST['submit']);
+
+    if (!empty($_POST['list_title'])) {
+        create($_POST['list_title']);
+
+    } else if(!empty($_POST['card_title'])) {
+        createCard($_POST['card_title'],$_POST['id']);
     }
+
     header('Location: ' . $_SERVER['SCRIPT_NAME']);
     exit;
 }
@@ -43,7 +48,7 @@ $DATA = fetchAll();
             <h2>TODOリスト</h2>
             <button id='open-form'>リストを追加する</button>
             <form method="post" class="create-form" id='show-form' style="display: none;">
-                <input type="text" name="submit" required>
+                <input type="text" name="list_title" required>
                 <button type="submit">リストを追加</button>
             </form>
 
@@ -51,13 +56,19 @@ $DATA = fetchAll();
                 <div class="board" id="board">
                     <?php if ($DATA) : ?>
                         <?php foreach ((array)$DATA as $raw) : ?>
-                            <div class="board-wrap">
-                                <div class="board-list">
-                                    <h3><?php echo ($raw['list_title']); ?></h3>
-                                    <input type="text" name="card_title" placeholder="＋ カードを追加する">
-                                    <button class="add-card" type="submit">カードを追加</button>
+                            <form method="post" style="display: inline-block;">
+                                <div class="board-wrap">
+                                    <input type="hidden" name="id" value="<?php echo($raw['id']); ?>">
+                                    <div class="board-list">
+                                        <h3><?php echo ($raw['list_title']); ?></h3>
+                                        <?php if ($raw['card_title']) : ?>
+                                            <a href="#"><?php echo ($raw['card_title']); ?></a>
+                                        <?php endif; ?>
+                                        <input type="text" name="card_title" placeholder="＋ カードを追加する">
+                                        <button class="add-card" type="submit">カードを追加</button>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </div>
