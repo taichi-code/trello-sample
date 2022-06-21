@@ -8,10 +8,6 @@ require_once('./functions.php');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($_POST['submit'])) {
         create($_POST['submit']);
-    } else if (isset($_POST['delete'])) {
-        delete($_POST['id']);
-    } else if (isset($_POST['update'])) {
-        update($_POST['id'], $_POST['title']);
     }
     header('Location: ' . $_SERVER['SCRIPT_NAME']);
     exit;
@@ -45,56 +41,29 @@ $DATA = fetchAll();
     <main class="main">
         <section class="content-wrapper">
             <h2>TODOリスト</h2>
-            <form method="post" class="create-form">
+            <button id='open-form'>リストを追加する</button>
+            <form method="post" class="create-form" id='show-form' style="display: none;">
                 <input type="text" name="submit" required>
-                <button type="submit">作成する</button>
+                <button type="submit">リストを追加</button>
             </form>
 
-            <table>
-                <?php if ($DATA) : ?>
-                    <tr>
-                        <th bgcolor="#808080" rowspan="2">
-                            <p>TODO</p>
-                        </th>
-                        <th bgcolor="#808080" rowspan="2">
-                            <p>作成日</p>
-                        </th>
-                        <th bgcolor="#808080" colspan="2" id="action">
-                            <p>操作</p>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th bgcolor="#808080" headers="action">
-                            <p>更新</p>
-                        </th>
-                        <th bgcolor="#808080" headers="action">
-                            <p>削除</p>
-                        </th>
-                    </tr>
-                <?php endif; ?>
-
-                <?php foreach ((array)$DATA as $raw) : ?>
-                    <form method="post">
-                        <tr>
-                            <input type="hidden" name="id" value="<?php echo $raw['id']; ?>">
-                            <td>
-                                <input type="text" name="title" value="<?php echo $raw['title']; ?>" required>
-                            </td>
-                            <td>
-                                <?php echo $raw['created']; ?>
-                            </td>
-                            <td>
-                                <button type="submit" name="update">更新する</button>
-                            </td>
-                            <td>
-                                <button type="submit" name="delete">削除する</button>
-                            </td>
-                        </tr>
-                    </form>
-                <?php endforeach; ?>
-
-            </table>
+            <div class="board-content">
+                <div class="board" id="board">
+                    <?php if ($DATA) : ?>
+                        <?php foreach ((array)$DATA as $raw) : ?>
+                            <div class="board-wrap">
+                                <div class="board-list">
+                                    <h3><?php echo ($raw['list_title']); ?></h3>
+                                    <input type="text" name="card_title" placeholder="＋ カードを追加する">
+                                    <button class="add-card" type="submit">カードを追加</button>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
         </section>
+
 
     </main>
     <!-- FOOTER-------------------------- -->
@@ -103,7 +72,9 @@ $DATA = fetchAll();
     </footer>
 
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.12.1/themes/smoothness/jquery-ui.css">
     <script src="js/swiper/swiper.min.js"></script>
     <script src="js/main.js"></script>
 </body>

@@ -35,3 +35,14 @@ $(function () {
     });
 
 });
+
+$(function () {
+    $('#open-form').button();
+    $('#open-form').click(function () {
+        $('#show-form').toggle('blind', '', 100);
+    });
+});
+
+$(function () {
+    $("#board").sortable();
+});

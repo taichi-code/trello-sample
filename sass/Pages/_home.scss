@@ -1,9 +1,50 @@
+.main {
+    position: relative;
+}
+
 .create-form {
     margin: 20px 0;
 }
 
 .content-wrapper {
-    width: 1000px;
+    width: 1100px;
     margin: 0 auto;
     margin-top: 40px;
+}
+
+.board-content {
+    position: relative;
+}
+.board {
+    margin-top: 20px;
+}
+
+.board-wrap {
+    display: inline-block;
+    width: 200px;
+    height: auto;
+    margin: 0 4px;
+}
+.board-list {
+    background-color: #ebecf0;
+    border-radius: 3px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    position: relative;
+    white-space: normal;
+    width: 100%!important;
+}
+
+.add-card {
+    background-color: #0079bf;
+    color: #fff;
+    border-radius: 3px;
+    display: flex;
+    max-width: 40%;
+    padding: 5px 3px;
+    border: 1px solid #fff;
+    font-size: 12px;
+    margin-top: 10px;
 }

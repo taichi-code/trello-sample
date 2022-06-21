@@ -1,6 +1,6 @@
 <?php
 function dbConnect() {
-    $dsn = 'mysql:dbname=sample_todo;host=localhost;port=3306;charset=utf8';
+    $dsn = 'mysql:dbname=trello_sample;host=localhost;port=3306;charset=utf8';
     $user = 'root';
     $password = 'root';
 
